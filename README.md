@@ -65,6 +65,15 @@ However, attention patterns shift between lighting conditions, particularly
 for complex objects (bed, bookshelf), providing visual evidence of the color
 encoding measured in Phase 2. The model is not fully invariant to illumination.
 
+**Airplane:**
+![airplane attention](assets/airplane_attention.png)
+
+**Bathtub:**
+![bathtub attention](assets/bathtub_attention.png)
+
+**Bed:**
+![bed attention](assets/bed_attention.png)
+
 ---
 
 ## Summary
