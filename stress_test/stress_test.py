@@ -35,29 +35,28 @@ def zero_shot_accuracy(model, preprocess, renders_dir, lighting):
         if f.endswith(f'__{lighting}.png')
     ]
 
-    with torch.no_grad():
-        for fname in files:
-            parts = fname.replace('.png', '').split('__')
-            if len(parts) != 3:
-                continue
-            true_category = parts[0]
-            if true_category not in CATEGORIES:
-                continue
+    for fname in files:
+        parts = fname.replace('.png', '').split('__')
+        if len(parts) != 3:
+            continue
+        true_category = parts[0]
+        if true_category not in CATEGORIES:
+            continue
 
-            img = preprocess(
-                Image.open(os.path.join(renders_dir, fname))
-            ).unsqueeze(0).to(DEVICE)
+        img = preprocess(
+            Image.open(os.path.join(renders_dir, fname))
+        ).unsqueeze(0).to(DEVICE)
 
-            img_features = model.encode_image(img)
-            img_features = img_features / img_features.norm(dim=-1, keepdim=True)
+        img_features = model.encode_image(img)
+        img_features = img_features / img_features.norm(dim=-1, keepdim=True)
 
-            similarities = (img_features @ text_features.T).squeeze(0)
-            pred_idx = similarities.argmax().item()
-            pred_category = CATEGORIES[pred_idx]
+        similarities = (img_features @ text_features.T).squeeze(0)
+        pred_idx = similarities.argmax().item()
+        pred_category = CATEGORIES[pred_idx]
 
-            if pred_category == true_category:
-                correct += 1
-            total += 1
+        if pred_category == true_category:
+            correct += 1
+        total += 1
 
     acc = correct / total * 100 if total > 0 else 0
     return acc
